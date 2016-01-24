@@ -1,0 +1,131 @@
+ <!DOCTYPE html>
+<html lang="en-US">
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta charset="utf-8">
+
+	<title>Pignus. Raspberry Pi Linux the way it should be</title>
+	<link rel="stylesheet" href="w3.css">
+	<link rel="stylesheet" href="pignus.css">
+</head>
+<body>
+
+<nav class="w3-topnav w3-light-white w3-right-align w3-padding-right">
+	<a href="index.html">Pignus</a>
+	<a href="zero.html">Zero</a>
+	<a href="minimal.html">Minimal</a>
+	<a href="custom.html">Custom</a>
+	<a href="faq.html">FAQ</a>
+	<a href="http://wiki.base48.cz/Pignus">For Developers</a>
+</nav>
+
+<div class="w3-card w3-margin">
+
+<header class="w3-container w3-light-grey">
+	<h1>Running Pignus Minimal</h1>
+</header>
+
+<p class="w3-container">
+The <a href="/pub/linux/pignus/23/images/pignus-minimal-23a.gz">Minimal image</a>
+contains only the most necessary software. You can install 
+more with <tt>dnf</tt> once your device is set up and connected to the Internet.
+</p>
+
+<h2 class="w3-container">Installing</h2>
+
+<p class="w3-container">
+Identify the device and write the uncompressed image to the raw device.
+</p>
+
+<p class="w3-container">
+Please note this will destory ALL data on the device. Make sure you select the 
+right device, there's no way back!
+</p>
+
+<pre class="w3-container">
+$ lsblk
+NAME                                          MAJ:MIN RM   SIZE RO TYPE  MOUNTPOINT
+sda                                             8:0    0 465.8G  0 disk  
+├─sda1                                          8:1    0     3G  0 part  
+└─sda2                                          8:2    0 462.8G  0 part  /
+mmcblk0                                       179:0    0   3.7G  0 disk  
+└─mmcblk0p1                                   179:1    0   3.7M  0 part  /run/media/bgates/32B4-B666
+$ su
+# umount /dev/mmcblk0p1
+# zcat pignus-minimal-23a.gz &gt;/dev/mmcblk0
+#
+</pre>
+
+<p class="w3-container">
+Now your card is ready for use with the Raspberry Pi.
+You may want to run <tt>gparted</tt> and reclaim the rest of the free space on your card.
+</p>
+
+<h2 class="w3-container">Configuring the Raspberry Pi</h2>
+
+<p class="w3-container">
+The Raspberry Pi is now entirely unconfigured. The <tt>root</tt> password is blank,
+which makes it possible to login in using the serial console, but disallows SSH logins.
+The are two partitions on the card: a FAT <tt>/boot</tt> partition and the root partition.
+</p>
+
+<p class="w3-container">
+If you have a UART adapter, you may want to enable the serial console by adding <tt>console=ttyAMA0</tt>
+to <tt>extlinux.conf</tt> on the <tt>/boot</tt> partition.
+</p>
+
+<p class="w3-container">
+Otherwise you may set up network log in. To allow <tt>root</tt> log in with your ssh key,
+mount the root partition and copy in your SSH key:
+</p>
+
+<pre class="w3-container">
+$ su
+# mount /dev/mmcblk0p2 /mnt
+# umask 077
+# mkdir /mnt/root/.ssh
+# cat $HOME/.ssh/id_rsa.pub &gt;/mnt/root/.ssh/aurhorized_keys
+# umount /mnt
+</pre>
+
+<p class="w3-container">
+You can now power your Raspberry Pi to the network. It might be a good idea
+to watch for it trying to get an IP address, so that you know what address it gets:
+</p>
+
+<pre class="w3-container">
+# tcpdump port dhcpc
+tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+listening on wlp4s0, link-type EN10MB (Ethernet), capture size 262144 bytes
+22:37:47.880544 IP 0.0.0.0.bootpc &gt; 255.255.255.255.bootps: BOOTP/DHCP, Request from 28:b2:bd:5d:23:a7 (oui Unknown), length 302
+22:37:47.884430 IP 172.31.50.1.bootps &gt; 172.31.50.150.bootpc: BOOTP/DHCP, Reply, length 308
+^C
+</pre>
+
+<p class="w3-container">
+We got 172.31.50.150. Sweet.
+</p>
+
+<pre class="w3-container">
+$ ssh root@172.31.50.150
+...
+</pre>
+
+</div>
+
+<footer class="w3-container w3-light-white w3-border-top w3-small oss-grey">
+	<p>© 2016 Pignus project contributors.
+
+	Raspberry Pi is a
+	<a href="https://www.raspberrypi.org/trademark-rules/">trademark</a>
+	of the Raspberry Pi Foundation.
+
+	Linux is a registered
+	<a href="http://www.linuxfoundation.org/programs/legal/trademark">trademark</a>
+	of Linus Torvalds.
+
+	</p>
+</footer>
+
+</body>
+</html>

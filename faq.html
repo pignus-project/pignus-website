@@ -1,0 +1,110 @@
+ <!DOCTYPE html>
+<html lang="en-US">
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta charset="utf-8">
+
+	<title>Pignus. Raspberry Pi Linux the way it should be</title>
+	<link rel="stylesheet" href="w3.css">
+	<link rel="stylesheet" href="pignus.css">
+</head>
+<body>
+
+<nav class="w3-topnav w3-light-white w3-right-align w3-padding-right">
+	<a href="index.html">Pignus</a>
+	<a href="zero.html">Zero</a>
+	<a href="minimal.html">Minimal</a>
+	<a href="custom.html">Custom</a>
+	<a href="faq.html">FAQ</a>
+	<a href="http://wiki.base48.cz/Pignus">For Developers</a>
+</nav>
+
+<div class="w3-card w3-margin">
+
+<header class="w3-container w3-light-grey">
+	<h1>Frequently Asked Questions</h1>
+</header>
+
+<p class="w3-container">
+Noone asked us anything, so we made this up.
+</p>
+
+<h3 class="w3-container">What's wrong with the default software on Raspberry Pi</h3>
+
+<p class="w3-container">
+Nothing, really. It's perfect for what it's designed for.
+</p>
+
+<p class="w3-container">
+It, however makes us a bit worried. It contains drivers not present in mainline kernel
+that didn't pass the rigourous review process Linux is known and valued for. They, for
+instance, expose files in <tt>/dev</tt> that expose raw access to hardware for an unprivileged
+user. This is something that's probably fine on a toy, but something very uncommon for
+a production Linux system.
+</p>
+
+<p class="w3-container">
+It also ships no SELinux by default and it's not trivial to make it work.
+Also, despite arguably a matter of taste, we prefer RPM to DEB.
+<p>
+
+<h3 class="w3-container">You did an Alpha release. When are you doing a real release?</h3>
+
+<p class="w3-container">
+When it's ready. Which likely is Q1 2016.
+</p>
+
+<h3 class="w3-container">How can I help?</h3>
+
+<p class="w3-container">
+Become a Fedora packager.
+</p>
+
+<p class="w3-container">
+Donations of hardware and money for the build cluster are very welcome.
+</p>
+
+<h3 class="w3-container">What hardware do you support?</h3>
+
+<p class="w3-container">
+We target all BCM2835-based (<tt>armv6</tt>) boards:
+</p>
+
+<p>
+<ul class="w3-container w3-margin-left">
+<li>Raspberry Pi Model A</li>
+<li>Raspberry Pi Model A+</li>
+<li>Raspberry Pi Model B</li>
+<li>Raspberry Pi Compute Module</li>
+<li>Raspberry Pi Zero</li>
+</ul>
+</p>
+
+<p class="w3-container">
+Raspberry Pi 2 Model B is not supported.
+</p>
+
+<h3 class="w3-container">What is your relation to Pidora?</h3>
+
+<p class="w3-container">
+We aim to continue where Pidora has left off. Without insulting the Russian speaking folks ;)
+</p>
+
+</div>
+
+<footer class="w3-container w3-light-white w3-border-top w3-small oss-grey">
+	<p>© 2016 Pignus project contributors.
+
+	Raspberry Pi is a
+	<a href="https://www.raspberrypi.org/trademark-rules/">trademark</a>
+	of the Raspberry Pi Foundation.
+
+	Linux is a registered
+	<a href="http://www.linuxfoundation.org/programs/legal/trademark">trademark</a>
+	of Linus Torvalds.
+
+	</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,71 @@
+ <!DOCTYPE html>
+<html lang="en-US">
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta charset="utf-8">
+
+	<title>Pignus. Raspberry Pi Linux the way it should be</title>
+	<link rel="stylesheet" href="w3.css">
+	<link rel="stylesheet" href="pignus.css">
+</head>
+<body>
+
+<nav class="w3-topnav w3-light-white w3-right-align w3-padding-right">
+	<a href="index.html">Pignus</a>
+	<a href="zero.html">Zero</a>
+	<a href="minimal.html">Minimal</a>
+	<a href="custom.html">Custom</a>
+	<a href="faq.html">FAQ</a>
+	<a href="http://wiki.base48.cz/Pignus">For Developers</a>
+</nav>
+
+<div class="w3-card w3-margin">
+
+<header class="w3-container w3-light-grey">
+	<h1>Creating custom Pignus Images</h1>
+</header>
+
+<p class="w3-container">
+To create Pignus distribution images we use <tt>appliance-creator</tt>, a tool
+uses kickstart files to describe the installation package set and configuration.
+We keep our kickstarts in <a href="https://github.com/pignus-project/pignus-kickstarts">pignus-kickstarts</a>
+repository.
+</p>
+
+<p class="w3-container">
+Running <tt>appliance-creator</tt> from your existing Pignus installation is as simple as this:
+</p>
+
+<pre class="w3-container">
+$ su
+$ git clone https://github.com/pignus-project/pignus-kickstarts 
+$ cd pignus-kickstarts
+$ su
+# dnf -y install appliance-creator
+# appliance-creator -n pignus-zero -c pignus-zero.ks --no-compress
+#
+</pre>
+
+<p class="w3-container">
+Tip: you can also run <tt>appliance-creator</tt> from a Fedora/arm installation on a different board
+than Raspberry Pi. Building on a non-ARM machine (such as Intel-based PC) won't work.
+</p>
+
+</div>
+
+<footer class="w3-container w3-light-white w3-border-top w3-small oss-grey">
+	<p>© 2016 Pignus project contributors.
+
+	Raspberry Pi is a
+	<a href="https://www.raspberrypi.org/trademark-rules/">trademark</a>
+	of the Raspberry Pi Foundation.
+
+	Linux is a registered
+	<a href="http://www.linuxfoundation.org/programs/legal/trademark">trademark</a>
+	of Linus Torvalds.
+
+	</p>
+</footer>
+
+</body>
+</html>

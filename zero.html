@@ -1,0 +1,188 @@
+ <!DOCTYPE html>
+<html lang="en-US">
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta charset="utf-8">
+
+	<title>Pignus. Raspberry Pi Linux the way it should be</title>
+	<link rel="stylesheet" href="w3.css">
+	<link rel="stylesheet" href="pignus.css">
+</head>
+<body>
+
+<nav class="w3-topnav w3-light-white w3-right-align w3-padding-right">
+	<a href="index.html">Pignus</a>
+	<a href="zero.html">Zero</a>
+	<a href="minimal.html">Minimal</a>
+	<a href="custom.html">Custom</a>
+	<a href="faq.html">FAQ</a>
+	<a href="http://wiki.base48.cz/Pignus">For Developers</a>
+</nav>
+
+<div class="w3-card w3-margin">
+
+<header class="w3-container w3-light-grey">
+	<h1>Running Pignus Zero</h1>
+</header>
+
+<p class="w3-container">
+The <a href="/pub/linux/pignus/23/images/pignus-zero-23a.gz">Zero image</a>
+contains the same software set as the <a href="minimal.html">Minimal</a>
+image. It's set up for connectivity via Raspberry Pi Zero's USB port in device mode,
+making it well suited for the Zero boards.
+</p>
+
+<h2 class="w3-container">Installing</h2>
+
+<p class="w3-container">
+Identify the device and write the uncompressed image to the raw device.
+</p>
+
+<p class="w3-container">
+Please note this will destory ALL data on the device. Make sure you select the 
+right device, there's no way back!
+</p>
+
+<pre class="w3-container">
+$ lsblk
+NAME                                          MAJ:MIN RM   SIZE RO TYPE  MOUNTPOINT
+sda                                             8:0    0 465.8G  0 disk  
+├─sda1                                          8:1    0     3G  0 part  
+└─sda2                                          8:2    0 462.8G  0 part  /
+mmcblk0                                       179:0    0   3.7G  0 disk  
+└─mmcblk0p1                                   179:1    0   3.7M  0 part  /run/media/bgates/32B4-B666
+$ su
+# umount /dev/mmcblk0p1
+# zcat pignus-zero-23a.gz &gt;/dev/mmcblk0
+#
+</pre>
+
+<p class="w3-container">
+Now your card is ready for use with the Raspberry Pi.
+You may want to run <tt>gparted</tt> and reclaim the rest of the free space on your card.
+</p>
+
+<h2 class="w3-container">Connecting to the Raspberry Pi</h2>
+
+<p class="w3-container">
+You can now apply power to the device and connect it to your computer. A single USB cable connected to the connector marked "USB" will work.
+The "ACT" LED will flash and the device will start booting. In up to two minutes, the Raspberry Pi will switch to the USB device mode.
+You'll see the following lines in your dmesg:
+</p>
+
+<pre class="w3-container">
+usb 1-3: new high-speed USB device number 110 using xhci_hcd
+usb 1-3: new high-speed USB device number 111 using xhci_hcd
+usb 1-3: New USB device found, idVendor=0525, idProduct=a4aa
+usb 1-3: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+cdc_ether 1-3:1.0 usb0: register 'cdc_ether' at usb-0000:00:14.0-3, CDC Ethernet Device, 52:8e:b9:6c:48:ea
+cdc_acm 1-3:1.2: ttyACM0: USB ACM device
+cdc_ether 1-3:1.0 enp0s20u3: renamed from usb0
+IPv6: ADDRCONF(NETDEV_UP): enp0s20u3: link is not ready
+IPv6: ADDRCONF(NETDEV_CHANGE): enp0s20u3: link becomes ready
+</pre>
+
+<p class="w3-container">
+Two new USB devices appeared: the serial port <tt>ttyACM0</tt> and a network device <tt>usb0</tt>.
+</p>
+
+<p class="w3-container">
+First, connect to the serial port. Log in as <tt>root</tt>, set up the password and create a user
+account for you:
+</p>
+
+<pre class="w3-container">
+# screen /dev/ttyACM0
+Pignus release 23 (Alpha)
+Kernel 4.4.0-1.pi2.fc23.armv6hl on an armv6l (ttyGS0)
+
+localhost login: root
+Last login: Wed Dec 31 19:03:51 on ttyGS0
+[root@localhost ~]# passwd
+Changing password for user root.
+New password: 
+Retype new password: 
+passwd: all authentication tokens updated successfully.
+[root@localhost ~]# useradd -m rpiuser
+[root@localhost ~]# passwd rpiuser
+Changing password for user rpiuser.
+New password: 
+Retype new password: 
+passwd: all authentication tokens updated successfully.
+[root@localhost ~]# 
+</pre>
+
+<p class="w3-container">
+Terminate the <tt>screen</tt> session with CTRL+A followed by K and y.
+</p>
+
+<p class="w3-container">
+Now that you have a user account, you can log in through the network.
+Your Raspberry Pi's address is 10.42.0.1.
+</p>
+
+<pre class="w3-container">
+$ ssh rpiuser@10.42.0.1
+rpiuser@10.42.0.1's password: 
+[rpiuser@localhost ~]$ 
+</pre>
+
+<h2 class="w3-container">Sharing the Internet connection with the Raspberry Pi</h2>
+
+<p class="w3-container">
+By default, the device runs a DHCP server that assigns an IPv4 address to
+your computer. If you want to share your computer's connection with the
+Raspberry Pi you need to reverse the setting. First, run the DHCP server
+on your computer:
+</p>
+
+<pre class="w3-container">
+$ nmcli c add type ethernet con-name rpi-dhcp ifname enp0s20u3
+Connection 'rpi-dhcp' (56a2dc40-58c4-40b8-a009-ee35f8d709c6) successfully added.
+$ nmcli c modify rpi-dhcp ipv4.method shared
+$ nmcli c up rpi-dhcp
+Connection successfully activated (D-Bus active path: /org/freedesktop/NetworkManager/ActiveConnection/35)
+$
+</pre>
+
+<p class="w3-container">
+Then turn on DHCP client on the Raspberry Pi:
+</p>
+
+<pre class="w3-container">
+# screen /dev/ttyACM0
+[root@localhost ~]# nmcli c modify usb0 ipv4.method auto
+[root@localhost ~]# nmcli c up usb0
+Connection successfully activated (D-Bus active path: /org/freedesktop/NetworkManager/ActiveConnection/7)
+</pre>
+
+<p class="w3-container">
+Were all done. Check access to the Internet:
+</p>
+
+<pre class="w3-container">
+[root@localhost ~]# ping pignus.computer
+PING pignus.computer (77.93.223.108) 56(84) bytes of data.
+64 bytes from base48.cz (77.93.223.108): icmp_seq=1 ttl=54 time=14.0 ms
+64 bytes from base48.cz (77.93.223.108): icmp_seq=2 ttl=54 time=14.3 ms
+...
+</pre>
+
+</div>
+
+<footer class="w3-container w3-light-white w3-border-top w3-small oss-grey">
+	<p>© 2016 Pignus project contributors.
+
+	Raspberry Pi is a
+	<a href="https://www.raspberrypi.org/trademark-rules/">trademark</a>
+	of the Raspberry Pi Foundation.
+
+	Linux is a registered
+	<a href="http://www.linuxfoundation.org/programs/legal/trademark">trademark</a>
+	of Linus Torvalds.
+
+	</p>
+</footer>
+
+</body>
+</html>
