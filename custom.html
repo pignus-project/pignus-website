@@ -26,29 +26,26 @@
 </header>
 
 <p class="w3-container">
-To create Pignus distribution images we use <tt>appliance-creator</tt>, a tool
+To create Pignus distribution images we use <tt>appliance-creator</tt>. This tool
 uses kickstart files to describe the installation package set and configuration.
-We keep our kickstarts in <a href="https://github.com/pignus-project/pignus-kickstarts">pignus-kickstarts</a>
+We keep all our kickstarts in the <a href="https://github.com/pignus-project/pignus-kickstarts">pignus-kickstarts</a>
 repository.
 </p>
 
 <p class="w3-container">
-Running <tt>appliance-creator</tt> from your existing Pignus installation is as simple as this:
+Running <tt>appliance-creator</tt> from an <u>existing</u> Pignus installation is as simple as this:
 </p>
 
 <pre class="w3-container">
-$ su
-$ git clone https://github.com/pignus-project/pignus-kickstarts 
-$ cd pignus-kickstarts
-$ su
-# dnf -y install appliance-creator
+# git clone https://github.com/pignus-project/pignus-kickstarts 
+# cd pignus-kickstarts
+# dnf -y install appliance-tools
 # appliance-creator -n pignus-zero -c pignus-zero.ks --no-compress
-#
 </pre>
 
 <p class="w3-container">
-Tip: you can also run <tt>appliance-creator</tt> from a Fedora/arm installation on a different board
-than Raspberry Pi. Building on a non-ARM machine (such as Intel-based PC) won't work.
+Tip: you can also run <tt>appliance-creator</tt> from a Fedora/ARM installation on a different board
+than Raspberry Pi. Building on a non-ARM machine (such as an Intel-based PC) won't work.
 </p>
 
 </div>
